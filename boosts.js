@@ -7400,7 +7400,6 @@ Molpy.DefineBoosts = function() {
 			multiplier *= Molpy.BBC();
 			var glassUse = Molpy.CalcGlassUse();
 			multiplier *= Math.max(0, ((100 - glassUse) / 100));
-			if (Molpy.Got('Hugo')) multiplier *= 1.1;
 			Molpy.globalSpmNPMult = multiplier;
 			this.sandPermNP *= Molpy.globalSpmNPMult;
 			if(isNaN(this.sandPermNP)) {
