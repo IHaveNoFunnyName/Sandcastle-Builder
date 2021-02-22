@@ -11728,8 +11728,13 @@ Molpy.DefineBoosts = function() {
 	new Molpy.Boost({
 		name: 'Hugo',
 		icon: 'hugo',
-		desc: function() { return (Molpy.Got('The Pope')?'Adds 0.001% per badge to Papal effects':'Gain 10% Sand/mNP') },
-		stats: 'Time won the Hugo award for the best graphic novel of 2013',
+		toolBonus: function() { return "50"},
+		probabilityRun: function(chance) { return "2"},
+		desc: function(me) { return ('Provides various bonuses through Time:' +
+			`\nTools have a ${me.toolBonus()}% chance to activate an additional time, giving a ${me.probabilityRun(me.toolBonus())}x multiplier on average.` +
+			(Molpy.Got('The Pope') ? '\nAdds TODO% to Papal effects.' : '')) },
+		stats: function() { return ('The tool bonus is based on badges, discoveries and monuments. This does not effect displayed sand/mNP or anything based on it.' +
+			Molpy.Got('The Pope') ? 'The Papal bonus is based on discoveries and monuments' : '') },
 		Sand: 1,
 	});
 
