@@ -3364,8 +3364,11 @@ Molpy.DefineBoosts = function() {
 			
 			desc: function(me) {
 				var str = 'Multiplies ' + Molpy.glassCeilingDescText[i] + ' by 33 per Glass Ceiling.<br>';
-				if(me.bought)
+				if(me.bought) {
 					str += '<input type="Button" value="Lock" onclick="Molpy.CeilingLock(' + i + ')"></input>';
+				} else {
+					str += `<input type="Button" value="Unlock" onclick="Molpy.Boosts['Glass Ceiling ${i}'].buy()"></input>`;
+				}
 				return str;
 			},
 			
