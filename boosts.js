@@ -11726,6 +11726,22 @@ Molpy.DefineBoosts = function() {
 	});
 
 	new Molpy.Boost({
+
+		//The bonuses are meant to be tied to something that happens every nMP, and gives it a chance to happen again *every time it happens*, including the bonus activation
+
+		//I want each bonus to target a current bottleneck, might break the game's current balance but it can be tweaked
+		//If for example this means you get to vacuums before having enough discoveries
+		//The required ammount could be lowered or more discoveries could be added etc...
+
+		//The number used for calculating bonuses include all the higher tiers (+ a multiplier for higher tiers?)
+		//e.g. the first bonus is based on badges, discoveries, sand & glass & diamond monuments, and the third is based on sand & glass & diamond monuments
+		//Badges = tools //Discoveries = FA/TF/AA in such a way that it doesn't effect the break even point. Since this is activating it x times rather than activating it once for *x runs, this will also boost things like hubble double
+		//Sand monument = ??? Logicat rewards?  //Glass monument = vacuums //mastapiece = Time (A TODO feature)
+
+		//Maths bullshit: A bunch of working out and wolfram alpha spit out ceil(log(rand())/log(chance))
+		//to aproximate how many times you flip a coin with heads% chance before you get a tails.
+		//Seems like this is only accurate > 50% so maybe just manually calculate below that, probably won't be a performance hit because it's very unlikely it'll get past 4 flips.
+		//Who knows, maybe the log calls are more expensive than a loop would be.
 		name: 'Hugo',
 		icon: 'hugo',
 		toolBonus: function() { return "50"},
