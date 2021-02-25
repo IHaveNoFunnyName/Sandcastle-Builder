@@ -11731,20 +11731,40 @@ Molpy.DefineBoosts = function() {
 	new Molpy.Boost({
 
 		//The bonuses are meant to be tied to something that happens every nMP, and gives it a chance to happen again *every time it happens*, including the bonus activation
+		//Just because thematically it's running them multiple times it doesn't meant it has to actually, that'd murder performance
+		//If the same effect is possible just by doubling runs/output, do that
 
 		//I want each bonus to target a current bottleneck, might break the game's current balance but it can be tweaked
 		//If for example this means you get to vacuums before having enough discoveries
 		//The required ammount could be lowered or more discoveries could be added etc...
+			//There's like 5 discoveries across 150NP after the start of longpix, there's got to be more that can be added
 
 		//The number used for calculating bonuses include all the higher tiers (+ a multiplier for higher tiers?)
 		//e.g. the first bonus is based on badges, discoveries, sand & glass & diamond monuments, and the third is based on sand & glass & diamond monuments
-		//Badges = tools //Discoveries = FA/TF/AA in such a way that it doesn't effect the break even point. Since this is activating it x times rather than activating it once for *x runs, this will also boost things like hubble double
-		//Sand monument = ??? Logicat rewards?  //Glass monument = vacuums //mastapiece = Time (A TODO feature)
+
+		//Badges = tools
+		//Discoveries = FA (Early on is bonus chips, later on is blackprint construction, meaningless once you get AA) (Not something that runs every mNP but whatever)
+		//Sand monument = TF (Since this is activating it x times rather than activating it once for *x runs, this will also boost things like hubble double)
+		//Glass monument = vacuums
+		//mastapiece = Time (A TODO feature)
+
+		//I guess I'm fine with the monuments being the only boosts with relevancy late-game, that makes some sense
+
+		//The major balance consideration will have to be the tool bonus and the TF bonus, the balance and pacing of early glass should be noted
+		//and then once this is implimented run through it again to see how it compares
+		//Playthrough notes:
+	
+		//Early:
+		//Blast furnace produces chips that can be turned into TF chips * time lord * hugo FA mult 
+		//Tools produce TF chips * hugo tool mult, inconsequential
+		//TF builds tools out of TF chips
+			//At this stage TF can build so much more tools than your chip production, so the FA mult will be a straight multiplier to this part of the games speed
 
 		//Maths bullshit: A bunch of working out and wolfram alpha spit out ceil(log(rand())/log(chance))
 		//to aproximate how many times you flip a coin with heads% chance before you get a tails.
 		//Seems like this is only accurate > 50% so maybe just manually calculate below that, probably won't be a performance hit because it's very unlikely it'll get past 4 flips.
 		//Who knows, maybe the log calls are more expensive than a loop would be.
+
 		name: 'Hugo',
 		icon: 'hugo',
 		toolBonus: function() { return "50"},
