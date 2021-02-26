@@ -11752,28 +11752,48 @@ Molpy.DefineBoosts = function() {
 
 		//The major balance consideration will have to be the tool bonus and the TF bonus, the balance and pacing of early glass should be noted
 		//and then once this is implimented run through it again to see how it compares
-		//Playthrough notes:
-	
-		//Early:
-		//Blast furnace produces chips that can be turned into TF chips * time lord * hugo FA mult 
-		//Tools produce TF chips * hugo tool mult, inconsequential
-		//TF builds tools out of TF chips
-			//At this stage TF can build so much more tools than your chip production, so the FA mult will be a straight multiplier to this part of the games speed
+		
+		//Going through it I don't think it shouldn't be much of an issue, because I'm more annoyed at not having enough chips than I am having fun figuring out ways to make chips
 
-		//Maths bullshit: A bunch of working out and wolfram alpha spit out ceil(log(rand())/log(chance))
+		//Maths bullshit: A bunch of working out and wolfram alpha spit out ceil(log(rand())/log(chance)) (And a magic polynomial to generate those chances)
 		//to aproximate how many times you flip a coin with heads% chance before you get a tails.
 		//Seems like this is only accurate > 50% so maybe just manually calculate below that, probably won't be a performance hit because it's very unlikely it'll get past 4 flips.
 		//Who knows, maybe the log calls are more expensive than a loop would be.
 
 		name: 'Hugo',
 		icon: 'hugo',
-		toolBonus: function() { return "50"},
+		chance: function(tier) {
+			let x = 0;
+			let groups = ['badges', 'discov', 'monums', 'monumg', 'diamm']
+			for (i = 0; i <= tier; i++) {
+				x += Molpy.groupBadgeCounts[groups[i]];
+			}
+			if (x == 0) return 0;
+			prob = 0.0000000108667 * Math.pow(x, 3); 	//Magic polynomial
+			prob -= 0.0000137614 * Math.pow(x, 2);		//Gives (approx) 10% at 10, 25% at 50, 50% at 100, 75% at 200. 875% at 400
+			prob += 0.00591216 * x;
+			prob += 0.023124;
+			return prob = Math.min(0.9, prob);			//Cap out at 90% at ~500
+		},
+		bonus: function(tier) {
+			prob = this.chance(tier);
+			if (prob == 0) return 1;
+			let times = 1;
+			if (prob >= 0.5) {
+				times = Math.ceil(Math.log(Math.random())/Math.log(prob)) 
+			} else {
+				while (Math.random() < prob) {
+					times ++;
+				}
+			}
+			return times;
+		},
 		probabilityRun: function(chance) { return "2"},
 		desc: function(me) { return ('Provides various bonuses through Time:' +
-			`\nTools have a ${me.toolBonus()}% chance to activate an additional time, giving a ${me.probabilityRun(me.toolBonus())}x multiplier on average.` +
-			(Molpy.Got('The Pope') ? '\nAdds TODO% to Papal effects.' : '')) },
+			`<br>Tools have a ${Math.floor(me.chance(0) * 100)}% chance to activate an additional time.` +
+			Molpy.Boosts['Factory Automation'].bought ? `<br>Factory Automation has a ${Math.floor(me.chance(1) * 100)}% chance to activate an additional time.` : '') },
 		stats: function() { return ('The tool bonus is based on badges, discoveries and monuments. This does not effect displayed sand/mNP or anything based on it.' +
-			Molpy.Got('The Pope') ? 'The Papal bonus is based on discoveries and monuments' : '') },
+			Molpy.Boosts['Factory Automation'].bought ? '<br>The factory automation bonus is based on discoveries and monuments.' : '') },
 		Sand: 1,
 	});
 
