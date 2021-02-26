@@ -2238,9 +2238,15 @@ Molpy.Up = function() {
 									Molpy.Redacted.spoilerScroll = 1;							//We also want to do that if they scroll the container div 
 									var parents = anchor.parents()								//I'm sure there's a better way to do this but I don't really use $
 									for (i = 0; i < parents.length; i++){						//And this isn't exactly a use case I can go to stackoverflow for
-										parent = parents[i];									//"Yes I need to position a div at another... No no I can't just make it the parent -
+										let parent = parents[i];								//"Yes I need to position a div at another... No no I can't just make it the parent -
 										if ($(parent).css('overflow').indexOf('auto') != -1) {	//the whole display gets repainted every mNP" "why... And what's a mNP"
+											$(parent).off('scroll');
 											$(parent).scroll(function() {
+												console.log($(parent).has('#redactedSpoilerAnchor').length)
+												if ($(parent).has('#redactedSpoilerAnchor').length == 0) { 
+													$(parent).off('scroll');
+													return;
+												}
 												spoiler.css(anchor.offset());
 												if(anchor.position().top < 0) {
 													spoiler.css({display: 'none'});
